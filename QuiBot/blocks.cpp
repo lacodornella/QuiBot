@@ -103,25 +103,6 @@ uint8_t read_block_color(){
         uint32_t min_difference = UINT32_MAX;               // Saves the minimum color difference found
         uint8_t min_diff_color_id = BK;                     // Saves the color id which had the smallest difference
         
-        // uint16_t red = color_sensor.raw().r;
-        // uint16_t green = color_sensor.raw().g;
-        // uint16_t blue = color_sensor.raw().b;
-        // uint16_t clear = color_sensor.raw().c;
-
-        // uint32_t sum = clear;
-        // float r = red;
-        // float g = green;
-        // float b = blue;
-
-        // r /= sum; 
-        // g /= sum; 
-        // b /= sum;
-
-        // r *= 256;
-        // g *= 256;
-        // b *= 256;
-
-        //color_sensor.raw().c;
         Serial.print(measured_color.r);
         Serial.print(":");
         Serial.print(measured_color.g);
