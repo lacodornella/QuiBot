@@ -20,7 +20,6 @@ The controller used is an ESP32 that controls the following devices:
     - 2x 8x8 Adressable RGB Led matrix
 
 
-
 ## Installation
 
 The ESP32 controller can be programmed using Arduino IDE. The following libraries are required:
@@ -28,3 +27,8 @@ The ESP32 controller can be programmed using Arduino IDE. The following librarie
  - [Adafruit_VL53L0X](https://github.com/adafruit/Adafruit_VL53L0X)
  - [TCS34725](https://github.com/hideakitai/TCS34725)
  - [AccelStepper](https://github.com/waspinator/AccelStepper)
+
+
+## Development
+
+This robot has been conceived and developed by Aleix Badia and Pau Lafoz from La Codornella under the UPC project "Qui-Bot H2O", led by Marta Tarrés and Toni Dorado, and funded by FECYT.
