@@ -2,7 +2,7 @@
 
 QuiBot is a robot to experiment basic sequential programming for children. No computer is needed as it can be programmed by using painted wooden blocks, where each color represents a different action. The robot has a backpack that can contain up to 12 blocks that execute as soon as they're consumed.
 
-[[./static/QuiBot_3D.jpeg|alt=QuiBot 3D]]
+![QuiBot 3D](./static/QuiBot_3D.jpeg)
 
 ## Hardware
 
