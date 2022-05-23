@@ -17,6 +17,12 @@ TaskHandle_t TaskHandle;
 #define CPU_CORE 0
 #define APP_CORE 1
 
+
+/**
+ * @brief The following task charges a block, reads its color, executes the required action and waits to finish, and start again.
+ * 
+ * @param pvParameters Not used.
+ */
 void task_read_blocks(void *pvParameters){
     (void) pvParameters;
 
@@ -123,17 +129,14 @@ void task_read_blocks(void *pvParameters){
 }
 
 
-
+/**
+ * @brief The following functions will be executed once after booting.
+ */
 void setup(){
     Serial.begin(9600);
     blocks_setup();
     motion_setup();
     eyes_setup();
-
-    // while (true) {
-    //     read_block_color();
-    //     delay(500);
-    // }
 
     arms_home();
     syringe_home();
@@ -144,7 +147,10 @@ void setup(){
 }
 
 
-
+/**
+ * @brief Loop is not used, as tasks are already created.
+ * 
+ */
 void loop(){
    vTaskDelay(pdMS_TO_TICKS(1000));
 }
