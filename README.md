@@ -1,6 +1,6 @@
 # QuiBot
 
-QuiBot is a robot to experiment basic sequential programming with children. No computer is needed as it can be programmed by using painted wooden blocks, where each color represents a different action. The robot has a backpack that can contain up to 12 blocks that execute as soon as they're consumed.
+QuiBot is a robot to experiment basic sequential programming for children. No computer is needed as it can be programmed by using painted wooden blocks, where each color represents a different action. The robot has a backpack that can contain up to 12 blocks that execute as soon as they're consumed.
 
 ## Hardware
 
@@ -23,4 +23,8 @@ The controller used is an ESP32 that controls the following devices:
 
 ## Installation
 
-The ESP32 can be programmed using the Arduino IDE. 
+The ESP32 controller can be programmed using Arduino IDE. The following libraries are required:
+ - [FastLed](https://github.com/FastLED/FastLED)
+ - [Adafruit_VL53L0X](https://github.com/adafruit/Adafruit_VL53L0X)
+ - [TCS34725](https://github.com/hideakitai/TCS34725)
+ - [AccelStepper](https://github.com/waspinator/AccelStepper)
