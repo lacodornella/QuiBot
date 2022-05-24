@@ -31,6 +31,14 @@ The ESP32 controller can be programmed using Arduino IDE. The following librarie
  - [AccelStepper](https://github.com/waspinator/AccelStepper)
 
 
+## Project folders
+
+The project uses the following folders:
+ - QuiBot: C++ Arduino program
+ - PCB_QuiBot: Kicad PCB project
+ - static: Used to store some static docs files
+
+
 ## Development
 
 This robot has been conceived and developed by Aleix Badia and Pau Lafoz from La Codornella under the UPC project "Qui-Bot H2O", led by Marta Tarrés and Toni Dorado, and funded by FECYT.
