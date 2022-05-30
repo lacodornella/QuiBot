@@ -16,4 +16,4 @@ The project uses the following folders:
 
 ## Development
 
-This robot has been conceived and developed by Aleix Badia and [Pau Lafoz](@pau-lafoz) from La Codornella under the UPC project "Qui-Bot H2O", led by Marta Tarrés and Toni Dorado, and funded by FECYT.
+This robot has been conceived and developed by Aleix Badia and Pau Lafoz (@pau-lafoz) from La Codornella under the UPC project "Qui-Bot H2O", led by Marta Tarrés and Toni Dorado, and funded by FECYT.
