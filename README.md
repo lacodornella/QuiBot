@@ -8,10 +8,10 @@ QuiBot is a robot to experiment basic sequential programming for children. No co
 ## Project folders
 
 The project uses the following folders:
- - 3D_design: 3D assembly process, BOM and printing files
- - QuiBot: C++ Arduino program
- - PCB_QuiBot: Kicad PCB project
- - Images: Used to store some project images
+ - [3D Design](./3D_design/): 3D assembly process, BOM and printing files
+ - [ESP-32 Arduino program](./QuiBot/): C++ Arduino program
+ - [Kicad PCB project](./PCB_QuiBot/): Kicad PCB project
+ - [Images](./Images/): Used to store some project images
 
 
 ## Development
