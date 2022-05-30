@@ -34,9 +34,10 @@ The ESP32 controller can be programmed using Arduino IDE. The following librarie
 ## Project folders
 
 The project uses the following folders:
+ - 3D_design: 3D assembly process, BOM and printing files
  - QuiBot: C++ Arduino program
  - PCB_QuiBot: Kicad PCB project
- - static: Used to store some static docs files
+ - Images: Used to store some project images
 
 
 ## Development
