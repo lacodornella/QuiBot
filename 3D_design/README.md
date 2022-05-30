@@ -3,9 +3,10 @@
 ![QuiBot 3D](../Images/QuiBot_3D.PNG)
 
 ## Printing process
-Sheet printing parts contains the list and details of all printable parts in the project.
-5 printing configurations are used in the project. All the printings can be done with standard 20 cm cube volume printer.
-The printing positions are shown in the folder printing positioning captions. 
+The list and details of all printable parts in the project can be found on [3D_Parts_list](./3D_Parts_list.ods) file.
+5 printing configurations are used in the project.
+All the printings can be done with standard 20 cm cube volume printer.
+The printing positions are shown in the folder "3D printing positioning captions". 
 
 ## Bill of materials
 Detailed on the [BOM file](./BOM.ods).
