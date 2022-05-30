@@ -8,6 +8,7 @@ Sheet printing parts contains the list and details of all printable parts in the
 The printing positions are shown in the folder printing positioning captions. 
 
 ## Assembly process
-The assembly process can be done using the schematic QuiBot_drawings.pdf and opening the Qui-bot.FCStd document with FreeCad. 
+The assembly process can be done using the schematic [QuiBot_drawings.pdf](./QuiBot_drawings.PDF) and opening the [Qui-bot.FCStd](./Qui-bot.FCStd) document with FreeCad. 
 
+![Assembly process](../Images/Assembly_process.png)
 
