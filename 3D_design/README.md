@@ -3,7 +3,7 @@
 ![QuiBot 3D](../Images/QuiBot_3D.PNG)
 
 ## Printing process
-The list and details of all printable parts in the project can be found on [3D_Parts_list](./3D_Parts_list.pdf) file.
+The list and details of all printable parts in the project can be found on [3D_Parts_list](./3D_parts_list.pdf) file.
 
 Other considerations:
  - 5 printing configurations are used in the project.
