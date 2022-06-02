@@ -7,7 +7,7 @@ The list and details of all printable parts in the project can be found on [3D_P
 
 Other considerations:
  - 5 printing configurations are used in the project.
- - All the printings can be done with standard 20 cm cube volume printer.
+ - All the printings can be done with standard 20 cm cube volume FDM printer.
  - The printing positions are shown in the folder "3D printing positioning captions". 
 
 ## Bill of materials
