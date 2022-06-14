@@ -62,7 +62,7 @@ void task_read_blocks(void *pvParameters){
             case RD:
                 /* Red - Go ahead */
                 expected_target = CROSSING;
-                eyes_turn_on(&EYES_FW, CRGB::Red);
+                eyes_turn_on(&EYES_FW, CRGB::Red, 3);
                 vTaskDelay(pdMS_TO_TICKS(1000));
                 xTaskCreatePinnedToCore(task_move_to, MOVE_TO_CROSSING, 2048, (void*) &expected_target, 1, &TaskHandle, APP_CORE);
                 Serial.println(MOVE_TO_CROSSING);
@@ -70,7 +70,7 @@ void task_read_blocks(void *pvParameters){
             
             case GN:
                 /* Green - Turn Right */
-                eyes_turn_on(&EYES_OPEN, CRGB::Green);
+                eyes_turn_on(&EYES_OPEN, CRGB::Green, 3);
                 vTaskDelay(pdMS_TO_TICKS(1000));
                 xTaskCreatePinnedToCore(task_rotate, TURN_90_CW, 1024, (void*) &CW, 1, &TaskHandle, APP_CORE);
                 Serial.println(TURN_90_CW);
@@ -78,7 +78,7 @@ void task_read_blocks(void *pvParameters){
             
             case BU:
                 /* Blue - Turn Left */
-                eyes_turn_on(&EYES_OPEN, CRGB::Blue);
+                eyes_turn_on(&EYES_OPEN, CRGB::Blue, 3);
                 vTaskDelay(pdMS_TO_TICKS(1000));
                 xTaskCreatePinnedToCore(task_rotate, TURN_90_CCW, 1024, (void*) &CCW, 1, &TaskHandle, APP_CORE);
                 Serial.println(TURN_90_CCW);
@@ -86,7 +86,7 @@ void task_read_blocks(void *pvParameters){
             
             case YE:
                 /* Yellow - Take something */
-                eyes_turn_on(&EYES_OPEN, CRGB::Yellow);
+                eyes_turn_on(&EYES_OPEN, CRGB::Yellow, 3);
                 vTaskDelay(pdMS_TO_TICKS(1000));
                 xTaskCreatePinnedToCore(task_take_or_leave_something, TAKE_SOMETHING, 2048, (void*) &TAKE, 1, &TaskHandle, APP_CORE);
                 Serial.println(TAKE_SOMETHING);
@@ -94,15 +94,15 @@ void task_read_blocks(void *pvParameters){
             
             case OG:
                 /* Orange - Leave something */
-                eyes_turn_on(&EYES_OPEN, CRGB::Orange);
+                eyes_turn_on(&EYES_OPEN, CRGB::OrangeRed, 3);
                 vTaskDelay(pdMS_TO_TICKS(1000));
                 xTaskCreatePinnedToCore(task_take_or_leave_something, LEAVE_SOMETHING, 2048, (void*) &LEAVE, 1, &TaskHandle, APP_CORE);
                 Serial.println(LEAVE_SOMETHING);
                 break;
             
             case VT:
-                /* Violet - Leave something */
-                eyes_turn_on(&EYES_OPEN, CRGB::Purple);
+                /* Violet - No action */
+            //     eyes_turn_on(&EYES_OPEN, CRGB::Purple);
                 xTaskCreatePinnedToCore(task_idle, DO_NOTHING, 700, NULL, 1, &TaskHandle, APP_CORE);
                 break;
         

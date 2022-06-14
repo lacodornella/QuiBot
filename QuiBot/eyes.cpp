@@ -14,6 +14,9 @@ const uint8_t ROW_NUM   = 8;                        // Leds per row
 const uint8_t COL_NUM   = 8;                        // Leds per column
 const uint8_t NUM_LEDS  = ROW_NUM * COL_NUM * 2;    // Total leds number on both eyes
 
+const uint8_t MAX_BR    = 170;                      // Max fading brightness
+const uint8_t MIN_BR    = 80;                      // Min fading brightness
+
 // Table that contains the eye's led information
 CRGB eyes[NUM_LEDS];
 
@@ -54,10 +57,19 @@ void eyes_turn_off(){
  * @param shape contains the leds to start
  * @param color of the leds to start
  */
-void eyes_turn_on(eyes_leds_t *shape, CRGB color) {
-    eyes_turn_off();
-    for (uint8_t i=0; i < shape->len; i++) {
-        eyes[shape->leds[i]] = color;
+void eyes_turn_on(eyes_leds_t *shape, CRGB color, uint8_t repeat) {
+    for (uint8_t i = 0; i < repeat; i++) {
+        eyes_turn_off();
+        for (uint8_t i=0; i < shape->len; i++) {
+            eyes[shape->leds[i]] = color;
+            vTaskDelay(pdMS_TO_TICKS(8));
+        }
+        if (i < (repeat - 1)) {
+            for (uint8_t i=0; i < shape->len; i++) {
+                eyes[shape->leds[i]] = CRGB::Black;
+                vTaskDelay(pdMS_TO_TICKS(8));
+            }
+        }
     }
 }
 
@@ -67,10 +79,16 @@ void eyes_turn_on(eyes_leds_t *shape, CRGB color) {
  * @param param 
  */
 void task_update_leds(void* param) {
+    bool dir = true;
+    uint8_t brightness = MAX_BR;     // Range 0 (black) to 255 (Max)
     while (true) {
-        const uint8_t BRIGHTNESS = 150;     // Range 0 (black) to 255 (Max)
-        FastLED.show(BRIGHTNESS);
-        vTaskDelay(pdMS_TO_TICKS(100));
+        if (dir){
+            brightness < MAX_BR ? brightness += 2 : dir = false;
+        } else {
+            brightness > MIN_BR ? brightness -= 2 : dir = true;
+        }
+        FastLED.show(brightness);
+        vTaskDelay(pdMS_TO_TICKS(50));
     }
 }
 
