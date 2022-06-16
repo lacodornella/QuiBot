@@ -39,8 +39,8 @@ const char* DO_NOTHING          = "Do nothing";
 /*****************
  * Motion Params *
  *****************/
-float wheels_max_speed  = 125;      // The desired maximum speed in steps per second
-float wheels_accel      = 125;      // The desired acceleration in steps per second per second
+float wheels_max_speed  = 130;      // The desired maximum speed in steps per second
+float wheels_accel      = 190;      // The desired acceleration in steps per second per second
 float arms_max_speed    = 250;      // The desired maximum speed in steps per second
 float arms_accel        = 125;      // The desired acceleration in steps per second per second
 float syringe_max_speed = 800;      // The desired maximum speed in steps per second
@@ -49,14 +49,15 @@ float syringe_accel     = 500;      // The desired acceleration in steps per sec
 // Wheels
 const uint8_t WHEEL_MECH_REDUCTION          = 5;
 const uint16_t WHEEL_STEPS_PER_REVOLUTION   = 200 * WHEEL_MECH_REDUCTION;
-const uint8_t MM_TO_CROSSING_CENTER         = 55;
+const uint8_t MM_TO_CROSSING_CENTER         = 62;
 const uint8_t MM_TO_OBJECT                  = 20;
 const uint16_t BLACK_THRESHOLD              = 1500;          // Value to be considered black.
 
 
 // Arm positions
-const uint16_t ARM_LOWER_POSITION   = 150;  // Steps from home to lower position
-const uint16_t ARM_UPPER_POSITION   = 750;  // Steps from home to upper position
+const uint16_t ARM_LOWER_POSITION     = 120;  // Steps from home to lower position
+const uint16_t ARM_L_UPPER_POSITION   = 900;  // Steps from home to upper position
+const uint16_t ARM_R_UPPER_POSITION   = 550;  // Steps from home to upper position
 
 // True when the wheels are controlled by speed target, false when position target.
 bool wheels_speed_mode              = false;
@@ -121,9 +122,18 @@ void move_arms_to(int16_t position) {
     }
 }
 
+void move_arms_up() {
+    arm_L.moveTo(ARM_L_UPPER_POSITION);
+    arm_R.moveTo(ARM_R_UPPER_POSITION);
+
+    while (arm_L.distanceToGo() != 0 && arm_R.distanceToGo() != 0) {
+        vTaskDelay(pdMS_TO_TICKS(100));
+    }
+}
+
 
 /**
- * @brief (deprecated not being used) Move both wheels to a position in steps from home and wait to arrive. The task calls `vTaskDelay()` to allow other tasks run.
+ * @brief Move both wheels to a position in steps from home and wait to arrive. The task calls `vTaskDelay()` to allow other tasks run.
  * 
  * @param int16_t position in steps from home
  * @param bool invert one of the wheels to make the robot turn (optional, false by default)
@@ -132,7 +142,7 @@ void move_wheels_to(int16_t position, bool invert = false) {
     wheel_L.moveTo(position);
     wheel_R.moveTo(invert ? -position : position);
 
-    while (wheel_L.distanceToGo() != 0 && wheel_R.distanceToGo() != 0) {
+    while (wheel_L.isRunning() && wheel_R.isRunning()) {
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
@@ -206,23 +216,24 @@ void arms_home(){
     enable_arms(ON);
 
     arm_L.move(-1250);
-    // arm_R.move(-1250);
+    arm_R.move(-1250);
 
     while (true){
         if (!is_endstop_detecting(END_L_A)) arm_L.run();
-        // if (!is_endstop_detecting(END_R_A)) arm_R.run();
-        // if (is_endstop_detecting(END_L_A) && is_endstop_detecting(END_R_A)) break;
-        if (is_endstop_detecting(END_L_A)) break;
+        if (!is_endstop_detecting(END_R_A)) arm_R.run();
+        if (is_endstop_detecting(END_L_A) && is_endstop_detecting(END_R_A)) break;
+        if (arm_L.distanceToGo() == 0 && arm_R.distanceToGo() == 0) break;
+        // if (is_endstop_detecting(END_L_A)) break;
     }
     arm_L.setCurrentPosition(0);
-    // arm_R.setCurrentPosition(0);
-    arm_L.move(750);
-    // arm_R.move(750);
+    arm_R.setCurrentPosition(0);
+    arm_L.move(ARM_L_UPPER_POSITION);
+    arm_R.move(ARM_R_UPPER_POSITION);
     
     while (true) {
         if (arm_L.distanceToGo() == 0 && arm_R.distanceToGo() == 0) break;
         arm_L.run();
-        // arm_R.run();
+        arm_R.run();
     }
 }
 
@@ -266,6 +277,7 @@ uint16_t distance_to_object(){
 
 /**
  * @brief Non-blocking line follower. Must be called regularly.
+ * @param speed
  * @return a value indicating if the path is cleared, os a crossing or object is reached when `dir` = true (FW)
  */
 line_follower_response_t follow_line_loop(float speed, bool dir = true){
@@ -381,8 +393,9 @@ void task_rotate(void *direction){
     while (true){
         const uint16_t line_follower_R = analogRead(LINES_R);
         const uint16_t line_follower_L = analogRead(LINES_L);
-        uint32_t error = (line_follower_L - line_follower_R);
-        if (error < 50 || positive_wheel->currentPosition() > (ROTATION_STEPS * 110) / 100) break;
+        const uint8_t ERROR_THRESHOLD = 20;
+        uint32_t error = abs(line_follower_L - line_follower_R);
+        if (error < ERROR_THRESHOLD || positive_wheel->currentPosition() > (ROTATION_STEPS * 110) / 100) break;
         wheels_set_speed(speed - (speed / error), true, *(bool*)direction);
         vTaskDelay(pdMS_TO_TICKS(10));
     }
@@ -452,19 +465,13 @@ void task_take_or_leave_something(void* take) {
         enable_syringe(OFF);
 
         // Move the arms up
-        move_arms_to(ARM_UPPER_POSITION);
+        move_arms_up();
 
         // Move the robot back to the crossing (home)
         enable_wheels(ON);
-        speed = 0;
-        while (true) {
-            compute_new_speed(&speed);
-            follow_line_loop(speed, false);
-            if (wheel_L.currentPosition() <= 0 || wheel_R.currentPosition() <= 0) {
-                break;
-            }
-        }
-        wheels_set_speed(0);
+        wheels_speed_mode = false;
+        wheels_set_speed(wheels_max_speed);
+        move_wheels_to(0);
     } else if (lf_response == CROSSING) {
         // Found crossing but was expecting an object
         run_to_crossing_center(&speed);

@@ -36,5 +36,6 @@ void task_move_to(void *expect_target);
 void task_rotate(void *dir);
 void task_take_or_leave_something(void* must_take);
 void task_idle(void * params);
+uint16_t distance_to_object();
 
 #endif

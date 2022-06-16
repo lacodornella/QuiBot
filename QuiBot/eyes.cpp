@@ -38,6 +38,11 @@ eyes_leds_t EYES_FW = {
                 95, 32, 31}
 };
 
+eyes_leds_t EYES_DOWN = {
+    4,
+    (uint8_t[]){97, 94, 33, 30}
+};
+
 
 void eyes_setup(){
     FastLED.addLeds<WS2811, LED_MTRX, GRB>(eyes, NUM_LEDS);
@@ -47,7 +52,11 @@ void eyes_setup(){
  * @brief Turn all the leds OFF
  */
 void eyes_turn_off(){
-    fill_solid(eyes, NUM_LEDS, CRGB::Black);    
+    for (uint8_t i=0; i < 50; i++){
+        fadeToBlackBy(eyes, NUM_LEDS, 10);
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }    
+    fill_solid(eyes, NUM_LEDS, CRGB::Black);
 }
 
 
@@ -57,16 +66,16 @@ void eyes_turn_off(){
  * @param shape contains the leds to start
  * @param color of the leds to start
  */
-void eyes_turn_on(eyes_leds_t *shape, CRGB color, uint8_t repeat) {
+void eyes_turn_on(eyes_leds_t *shape, CRGB color, uint8_t repeat, bool dir) {
     for (uint8_t i = 0; i < repeat; i++) {
         eyes_turn_off();
         for (uint8_t i=0; i < shape->len; i++) {
-            eyes[shape->leds[i]] = color;
+            eyes[shape->leds[dir ? i : (shape->len - 1 - i)]] = color;
             vTaskDelay(pdMS_TO_TICKS(8));
         }
         if (i < (repeat - 1)) {
             for (uint8_t i=0; i < shape->len; i++) {
-                eyes[shape->leds[i]] = CRGB::Black;
+                eyes[shape->leds[dir ? i : (shape->len - 1 - i)]] = CRGB::Black;
                 vTaskDelay(pdMS_TO_TICKS(8));
             }
         }

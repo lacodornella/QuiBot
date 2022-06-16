@@ -22,8 +22,8 @@ const uint8_t PWM_RESOLUTION = 16;
 // SERVO POSITIONS (0-255)
 const uint16_t MAX_SERVO_POS     = 8000;
 const uint16_t MIN_SERVO_POS     = 3277;
-const uint16_t OPEN_POSITION     = 7900;
-const uint16_t EJECT_POSITION    = 6300;
+const uint16_t OPEN_POSITION     = 8000;
+const uint16_t EJECT_POSITION    = 6450;
 uint16_t current_position  = OPEN_POSITION;
 
 // Color sensor object

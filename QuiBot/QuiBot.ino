@@ -36,6 +36,7 @@ void task_read_blocks(void *pvParameters){
 
     while(true){
         uint8_t color_id;
+        bool eyes_state = false;
 
         eyes_turn_on(&EYES_OPEN, CRGB::Gray);
 
@@ -47,22 +48,32 @@ void task_read_blocks(void *pvParameters){
         
         // Check the block color recursively
         while(true){
-            color_id = read_block_color();
-
-            if (color_id == BK){
-                // Black color -> No block
-                vTaskDelay(pdMS_TO_TICKS(CHECK_COLOR_MS));
+            if (distance_to_object() < 80) {
+                // Stop block in front of the robot
+                if (!eyes_state){
+                    eyes_turn_on(&EYES_DOWN, CRGB::Gray);
+                    eyes_state = true;
+                };
             } else {
+                color_id = read_block_color();
+
+                if (eyes_state){
+                    eyes_turn_on(&EYES_OPEN, CRGB::Gray, 1, false);
+                    eyes_state = false;
+                }
+
                 // A color is detected.
-                break;
+                if (color_id != BK) break;
+
             }
+            vTaskDelay(pdMS_TO_TICKS(CHECK_COLOR_MS));
         }
 
         switch (color_id) {
             case RD:
                 /* Red - Go ahead */
                 expected_target = CROSSING;
-                eyes_turn_on(&EYES_FW, CRGB::Red, 3);
+                eyes_turn_on(&EYES_FW, CRGB::DarkRed, 2);
                 vTaskDelay(pdMS_TO_TICKS(1000));
                 xTaskCreatePinnedToCore(task_move_to, MOVE_TO_CROSSING, 2048, (void*) &expected_target, 1, &TaskHandle, APP_CORE);
                 Serial.println(MOVE_TO_CROSSING);
@@ -70,7 +81,7 @@ void task_read_blocks(void *pvParameters){
             
             case GN:
                 /* Green - Turn Right */
-                eyes_turn_on(&EYES_OPEN, CRGB::Green, 3);
+                eyes_turn_on(&EYES_OPEN, CRGB::DarkGreen, 2);
                 vTaskDelay(pdMS_TO_TICKS(1000));
                 xTaskCreatePinnedToCore(task_rotate, TURN_90_CW, 1024, (void*) &CW, 1, &TaskHandle, APP_CORE);
                 Serial.println(TURN_90_CW);
@@ -78,7 +89,7 @@ void task_read_blocks(void *pvParameters){
             
             case BU:
                 /* Blue - Turn Left */
-                eyes_turn_on(&EYES_OPEN, CRGB::Blue, 3);
+                eyes_turn_on(&EYES_OPEN, CRGB::DarkBlue, 2);
                 vTaskDelay(pdMS_TO_TICKS(1000));
                 xTaskCreatePinnedToCore(task_rotate, TURN_90_CCW, 1024, (void*) &CCW, 1, &TaskHandle, APP_CORE);
                 Serial.println(TURN_90_CCW);
@@ -86,7 +97,7 @@ void task_read_blocks(void *pvParameters){
             
             case YE:
                 /* Yellow - Take something */
-                eyes_turn_on(&EYES_OPEN, CRGB::Yellow, 3);
+                eyes_turn_on(&EYES_OPEN, CRGB::Yellow, 2);
                 vTaskDelay(pdMS_TO_TICKS(1000));
                 xTaskCreatePinnedToCore(task_take_or_leave_something, TAKE_SOMETHING, 2048, (void*) &TAKE, 1, &TaskHandle, APP_CORE);
                 Serial.println(TAKE_SOMETHING);
@@ -94,7 +105,7 @@ void task_read_blocks(void *pvParameters){
             
             case OG:
                 /* Orange - Leave something */
-                eyes_turn_on(&EYES_OPEN, CRGB::OrangeRed, 3);
+                eyes_turn_on(&EYES_OPEN, CRGB::OrangeRed, 2);
                 vTaskDelay(pdMS_TO_TICKS(1000));
                 xTaskCreatePinnedToCore(task_take_or_leave_something, LEAVE_SOMETHING, 2048, (void*) &LEAVE, 1, &TaskHandle, APP_CORE);
                 Serial.println(LEAVE_SOMETHING);
